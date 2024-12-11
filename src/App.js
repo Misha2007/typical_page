@@ -4,6 +4,8 @@ import { Fragment, useState, useEffect } from "react";
 import Login from "./components/Login/Login";
 import Home from "./components/Home/Home";
 
+import AuthContext from "./store/auth-context";
+
 function App() {
   const [loggedIn, setLoggedIn] = useState(() => {
     if (JSON.parse(localStorage.getItem("isLoggedUser")) !== null) {
@@ -43,13 +45,15 @@ function App() {
   };
 
   return (
-    <Fragment>
-      <MainHeader isAuthenticated={loggedIn} onLogout={logoutHandler} />
+    <AuthContext.Provider
+      value={{ loggedIn: loggedIn, onLogout: logoutHandler }}
+    >
+      <MainHeader onLogout={logoutHandler} />
       <main>
         {!loggedIn && <Login onLogin={loginHandler} />}
         {loggedIn && <Home />}
       </main>
-    </Fragment>
+    </AuthContext.Provider>
   );
 }
 
